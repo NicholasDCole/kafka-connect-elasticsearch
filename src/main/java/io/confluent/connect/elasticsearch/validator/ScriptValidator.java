@@ -29,46 +29,46 @@ import org.elasticsearch.script.Script;
 
 public class ScriptValidator implements ConfigDef.Validator, ConfigDef.Recommender {
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public void ensureValid(String name, Object value) {
+  @Override
+  @SuppressWarnings("unchecked")
+  public void ensureValid(String name, Object value) {
 
-        if (value == null) {
-            return;
-        }
-
-        String script = (String) value;
-
-        try {
-            Script parsedScript = ScriptParser.parseScript(script);
-
-            if (parsedScript.getIdOrCode() == null) {
-                throw new ConfigException(name, script, "The specified script is missing code");
-            } else if (parsedScript.getLang() == null) {
-                throw new ConfigException(name, script, "The specified script is missing lang");
-            }
-
-        } catch (JsonProcessingException jsonProcessingException) {
-            throw new ConfigException(
-                    name, script, "The specified script is not a valid Elasticsearch painless script");
-        }
+    if (value == null) {
+      return;
     }
 
-    @Override
-    public String toString() {
-        return "A valid script that is able to be parsed";
-    }
+    String script = (String) value;
 
-    @Override
-    public List<Object> validValues(String name, Map<String, Object> parsedConfig) {
-        if (!parsedConfig.get(WRITE_METHOD_CONFIG).equals(SCRIPTED_UPSERT)) {
-            return new ArrayList<>();
-        }
-        return null;
-    }
+    try {
+      Script parsedScript = ScriptParser.parseScript(script);
 
-    @Override
-    public boolean visible(String name, Map<String, Object> parsedConfig) {
-        return parsedConfig.get(WRITE_METHOD_CONFIG).equals(SCRIPTED_UPSERT.name());
+      if (parsedScript.getIdOrCode() == null) {
+        throw new ConfigException(name, script, "The specified script is missing code");
+      } else if (parsedScript.getLang() == null) {
+        throw new ConfigException(name, script, "The specified script is missing lang");
+      }
+
+    } catch (JsonProcessingException jsonProcessingException) {
+      throw new ConfigException(
+          name, script, "The specified script is not a valid Elasticsearch painless script");
     }
+  }
+
+  @Override
+  public String toString() {
+    return "A valid script that is able to be parsed";
+  }
+
+  @Override
+  public List<Object> validValues(String name, Map<String, Object> parsedConfig) {
+    if (!parsedConfig.get(WRITE_METHOD_CONFIG).equals(SCRIPTED_UPSERT)) {
+      return new ArrayList<>();
+    }
+    return null;
+  }
+
+  @Override
+  public boolean visible(String name, Map<String, Object> parsedConfig) {
+    return parsedConfig.get(WRITE_METHOD_CONFIG).equals(SCRIPTED_UPSERT.name());
+  }
 }

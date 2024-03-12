@@ -24,38 +24,38 @@ import java.util.Map;
 
 public class ScriptParser {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+  private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static Script parseScript(String scriptJson) throws JsonProcessingException {
+  public static Script parseScript(String scriptJson) throws JsonProcessingException {
 
-        Map<String, Object> map = ScriptParser.parseSchemaStringAsJson(scriptJson);
+    Map<String, Object> map = ScriptParser.parseSchemaStringAsJson(scriptJson);
 
-        return Script.parse(map);
-    }
+    return Script.parse(map);
+  }
 
-    private static Map<String, Object> parseSchemaStringAsJson(String scriptJson)
-            throws JsonProcessingException {
+  private static Map<String, Object> parseSchemaStringAsJson(String scriptJson)
+      throws JsonProcessingException {
 
-        ObjectMapper objectMapper = new ObjectMapper();
+    ObjectMapper objectMapper = new ObjectMapper();
 
-        Map<String, Object> scriptConverted;
+    Map<String, Object> scriptConverted;
 
-        scriptConverted = objectMapper.readValue(
-                scriptJson, new TypeReference<Map<String, Object>>(){});
+    scriptConverted =
+        objectMapper.readValue(scriptJson, new TypeReference<Map<String, Object>>() {});
 
-        return scriptConverted;
-    }
+    return scriptConverted;
+  }
 
-    public static Script parseScriptWithParams(String scriptJson, String jsonPayload)
-            throws JsonProcessingException {
+  public static Script parseScriptWithParams(String scriptJson, String jsonPayload)
+      throws JsonProcessingException {
 
-        Map<String, Object> map = ScriptParser.parseSchemaStringAsJson(scriptJson);
+    Map<String, Object> map = ScriptParser.parseSchemaStringAsJson(scriptJson);
 
-        Map<String, Object> fields = objectMapper.readValue(jsonPayload,
-                new TypeReference<Map<String, Object>>() {});
+    Map<String, Object> fields =
+        objectMapper.readValue(jsonPayload, new TypeReference<Map<String, Object>>() {});
 
-        map.put("params", fields);
+    map.put("params", fields);
 
-        return Script.parse(map);
-    }
+    return Script.parse(map);
+  }
 }
